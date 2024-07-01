@@ -13,6 +13,16 @@ const answerSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Question',
     },
+    upvotes:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        default:0,
+    }],
+    downvotes:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        default:0,
+    }],
 });
 
 const Answer = new mongoose.model("Answer", answerSchema);

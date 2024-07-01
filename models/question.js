@@ -18,6 +18,16 @@ const questionSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Answer',
     }],
+    upvotes:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        default:0,
+    }],
+    downvotes:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        default:0,
+    }],
 });
 
 const Question = new mongoose.model("Question", questionSchema);
