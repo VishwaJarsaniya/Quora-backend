@@ -26,6 +26,27 @@ const handleDisplayQuestions = async(req,res) => {
     }
 };
 
+const handleDeleteQuestion = async(req,res) => {
+    try{
+        const ques = await Question.findById(req.params.id);
+        const deletedQues = await ques.deleteOne();
+        res.json({msg:"Question deleted successfully"});
+    }
+    catch(error){
+        res.status(500).json({error:"Error in deleting question"});
+    }
+};
+
+const handleUpdateQuestion = async(req,res) => {
+    try{
+        const ques = await Question.findByIdAndUpdate(req.params.id, req.body);
+        res.json({msg:"Question updated successfully"});
+    }
+    catch(error){
+        res.status(500).json({error:"Error in updating question", details: error.message});
+    }
+};
+
 const upvote = async(req,res) => {
     try{
         const question = await Question.findById(req.params.id);
@@ -50,7 +71,7 @@ const upvote = async(req,res) => {
     catch(error){
         res.status(500).json({error:"Error occurred", details: error.message});
     }
-}
+};
 
 const downvote = async(req,res) => {
     try{
@@ -76,13 +97,32 @@ const downvote = async(req,res) => {
     catch(error){
         res.status(500).json({error:"Error occurred", details: error.message});
     }
-}
+};
 
+
+const uploadImages = async(req,res) => {
+    try{
+        const images = req.files.map(file => ({
+            type: file.mimetype,
+            data: file.buffer,
+        }));
+        const question = await Question.findById(req.params.id);
+        question.images = images;
+        await question.save();
+        res.status(200).json({msg:"Images uploaded successfully"});
+    }
+    catch(error){
+        res.status(500).json({error:"Error uploading images", details: error.message});
+    }
+};
 
 
 module.exports = {
     handlePostQuestions,
     handleDisplayQuestions,
+    handleDeleteQuestion,
+    handleUpdateQuestion,
     upvote,
     downvote,
+    uploadImages,
 }

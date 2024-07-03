@@ -28,6 +28,10 @@ const questionSchema = new mongoose.Schema({
         ref:'User',
         default:0,
     }],
+    images:[{
+        type:{type: String},
+        data:{type: Buffer},
+    }]
 });
 
 const Question = new mongoose.model("Question", questionSchema);
