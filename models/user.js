@@ -36,7 +36,10 @@ const userSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
         default:0,
-    }]
+    }],
+    profilePicURL:{
+        type:String,
+    },
 });
 
 const User = new mongoose.model("User",userSchema);

@@ -3,6 +3,8 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { mailLog, mailReg } = require('./nodemailer');
+const cloudinary = require("cloudinary").v2;
+const { application } = require('express');
 const saltRounds = 10;
 
 const handleRegister = async(req,res) => {
@@ -30,7 +32,6 @@ const handleRegister = async(req,res) => {
     mailReg();
     return res.status(201).json({msg:"registered successfully", id: result._id})
 };
-
 
 const handleLogin = async(req,res) => {
     const body = req.body;
@@ -61,7 +62,6 @@ const handleLogin = async(req,res) => {
     }
 };
 
-
 const follow = async(req,res) => {
     try{
         const followUser = await User.findById(req.params.id);
@@ -80,7 +80,6 @@ const follow = async(req,res) => {
     }
     
 };
-
 
 const unfollow = async(req,res) => {
     try{
@@ -101,9 +100,35 @@ const unfollow = async(req,res) => {
 };
 
 
+cloudinary.config({
+    cloud_name : process.env.CLOUD_NAME,
+    api_key : process.env.API_KEY,
+    api_secret : process.env.API_SECRET,
+})
+
+const uploadProfilePicture = async(req,res) => {
+    try{
+        // console.log(req.file.path);
+        const result = await cloudinary.uploader.upload(req.file.path);
+        const profilePicURL = result.secure_url;
+    
+        const user = await User.findById(req.user._id);
+        user.profilePicURL = profilePicURL;
+        await user.save();
+    
+        return res.json({msg:"Profile pic uploaded"});
+    }
+    catch(error){
+        return res.status(500).json({error:"Failed to upload profile picture", details: error.message});
+    }
+
+}
+
+
 module.exports = {
     handleLogin,
     handleRegister,
     follow,
     unfollow,
+    uploadProfilePicture,
 }
