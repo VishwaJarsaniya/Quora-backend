@@ -4,6 +4,7 @@ const {connectMongoDb} = require("./config/connection");
 const userRoute = require("./routes/user");
 const questionRoute = require("./routes/question");
 const answerRoute = require("./routes/answer");
+const commentRoute = require("./routes/comment");
 
 const app = express();
 
@@ -18,5 +19,6 @@ connectMongoDb(url);
 app.use("/user", userRoute);
 app.use("/question", questionRoute);
 app.use("/", answerRoute);
+app.use("/comment", commentRoute);
 
 app.listen(PORT, ()=>{console.log(`Server started on PORT: ${PORT}`)})
